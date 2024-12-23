@@ -8,6 +8,7 @@ interface TodoContextProps {
   deleteTodo: (id: string) => void
   editTodo: (id: string, text: string) => void
   updateTodoStatus: (id: string) => void
+  moveTodo: (currentIndex: number, direction: 'up' | 'down') => void;
 }
 
 export interface Todo {
@@ -62,12 +63,23 @@ export const TodoProvider = (props: { children: React.ReactNode }) => {
     })
   }
 
+  const moveTodo = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1
+    if (newIndex < 0 || newIndex >= todos.length) return;
+
+    const newTodos = [...todos];
+    [newTodos[index], newTodos[newIndex]] = [newTodos[newIndex], newTodos[index]]
+    setTodos(newTodos)
+  }
+  
+  
   const value: TodoContextProps = {
     todos,
     addTodo,
     deleteTodo,
     editTodo,
     updateTodoStatus,
+    moveTodo,
   }
 
   return (
