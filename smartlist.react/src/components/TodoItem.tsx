@@ -61,7 +61,7 @@ export const TodoItem = (props: { todo: Todo }) => {
       layout
       key={todo.id}
       className={cn(
-        'p-5 rounded-xl bg-zinc-900',
+        'p-5 rounded-xl bg-zinc-900 list-none',
         todo.status === 'completed' && 'bg-opacity-50 text-zinc-500',
       )}
     >

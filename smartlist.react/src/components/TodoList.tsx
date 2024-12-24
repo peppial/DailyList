@@ -1,17 +1,29 @@
 import { TodoItem } from './TodoItem'
 import { useTodo } from '../context'
 import { SiStarship } from 'react-icons/si'
-import { useState } from 'react'
+import {useState} from 'react'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 
 export const TodoList = () => {
     const { todos, moveTodo} = useTodo()
     const [showCompleted, setShowCompleted] = useState(false)
+    
+    // Get current day (0 for Sunday to 6 for Saturday)
+    const currentDay = new Date().getDay();
 
-    const undoneTodos = todos.filter(todo => todo.status === 'undone')
-    const completedTodos = todos.filter(todo => todo.status === 'completed')
-    const filteredTodos = showCompleted ? todos : undoneTodos
+    // Filter todos based on current day
+    const undoneTodos = todos.filter(todo =>
+        todo.status === 'undone' &&
+        (todo.days?.length === 0 || todo.days?.includes(currentDay))
+    );
 
+    const completedTodos = todos.filter(todo =>
+        todo.status === 'completed' &&
+       (todo.days?.length === 0 || todo.days?.includes(currentDay))
+    );
+
+    const filteredTodos = showCompleted ? completedTodos : undoneTodos;
+    
     if (!todos.length || (!showCompleted && undoneTodos.length === 0)) {
         return (
             <div className="max-w-lg px-5 m-auto space-y-4">
@@ -23,7 +35,7 @@ export const TodoList = () => {
                 />
                 <h1 className="flex flex-col items-center gap-5 px-5 py-10 text-xl font-bold text-center rounded-xl bg-zinc-900">
                     <SiStarship className="text-5xl"/>
-                    You have nothing to do!
+                    You finished all your tasks! Great job!
                 </h1>
             </div>
         )
