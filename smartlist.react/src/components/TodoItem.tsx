@@ -9,6 +9,7 @@ import { RiDeleteBin7Line } from 'react-icons/ri'
 import { toast } from 'react-hot-toast'
 import cn from 'classnames'
 import { motion } from 'framer-motion'
+import {DAYS} from './Constants.tsx';
 
 export const TodoItem = (props: { todo: Todo }) => {
   const { todo } = props
@@ -100,30 +101,38 @@ export const TodoItem = (props: { todo: Todo }) => {
           <div className="flex justify-between gap-5 text-white">
             <button onClick={() => handleStatusUpdate(todo.id)}>
               {todo.status === 'undone' ? (
-                <span className="flex items-center gap-1">
-                  <BsCheck2Square />
+                  <span className="flex items-center gap-1">
+                      <BsCheck2Square/>
                   Mark Completed
                 </span>
               ) : (
-                <span className="flex items-center gap-1">
-                  <TbRefresh />
+                  <span className="flex items-center gap-1">
+                  <TbRefresh/>
                   Mark Undone
                 </span>
               )}
             </button>
+
+            {
+              (todo.days.length!=7)?
+                (
+              <span>{todo.days.map(d=>DAYS[d].slice(0,2))}
+          </span>
+                ):(<></>)
+            }
             <div className="flex items-center gap-2">
               <button
-                onClick={() => handleEdit(todo.id, todo.text)}
-                className="flex items-center gap-1 "
+                  onClick={() => handleEdit(todo.id, todo.text)}
+                  className="flex items-center gap-1 "
               >
-                <FaRegEdit />
+                <FaRegEdit/>
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(todo.id)}
-                className="flex items-center gap-1 text-red-500"
+                  onClick={() => handleDelete(todo.id)}
+                  className="flex items-center gap-1 text-red-500"
               >
-                <RiDeleteBin7Line />
+                <RiDeleteBin7Line/>
                 Delete
               </button>
             </div>

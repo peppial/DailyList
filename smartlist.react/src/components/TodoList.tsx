@@ -7,6 +7,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react'
 export const TodoList = () => {
     const { todos, moveTodo} = useTodo()
     const [showCompleted, setShowCompleted] = useState(false)
+    const [showAll, setShowAll] = useState(false)
     
     // Get current day (0 for Sunday to 6 for Saturday)
     const currentDay = new Date().getDay();
@@ -22,14 +23,17 @@ export const TodoList = () => {
        (todo.days?.length === 0 || todo.days?.includes(currentDay))
     );
 
-    const filteredTodos = showCompleted ? completedTodos : undoneTodos;
-    
-    if (!todos.length || (!showCompleted && undoneTodos.length === 0)) {
+    const filteredTodos = showAll?todos:showCompleted ? completedTodos : undoneTodos;
+   
+    console.log(showAll)
+    if (!todos.length || (!showAll && !showCompleted && undoneTodos.length === 0)) {
         return (
             <div className="max-w-lg px-5 m-auto space-y-4">
                 <FilterToggle
                     showCompleted={showCompleted}
                     setShowCompleted={setShowCompleted}
+                    showAll={showAll}
+                    setShowAll={setShowAll}
                     undoneCount={undoneTodos.length}
                     completedCount={completedTodos.length}
                 />
@@ -46,6 +50,8 @@ export const TodoList = () => {
             <FilterToggle
                 showCompleted={showCompleted}
                 setShowCompleted={setShowCompleted}
+                showAll={showAll}
+                setShowAll={setShowAll}
                 undoneCount={undoneTodos.length}
                 completedCount={completedTodos.length}
             />
@@ -83,7 +89,7 @@ export const TodoList = () => {
     )
 }
 
-const FilterToggle = ({ showCompleted, setShowCompleted, undoneCount, completedCount }: FilterToggleProps) => (
+const FilterToggle = ({ showCompleted, setShowCompleted,showAll,setShowAll, undoneCount, completedCount }: FilterToggleProps) => (
     <div className="flex justify-between items-center p-4 rounded-xl bg-zinc-900">
         <div className="flex items-center gap-2">
             <input
@@ -95,6 +101,16 @@ const FilterToggle = ({ showCompleted, setShowCompleted, undoneCount, completedC
             />
             <label htmlFor="showCompleted" className="text-sm text-zinc-400">
                 Show completed tasks
+            </label>
+            <input
+                type="checkbox"
+                id="showAll"
+                checked={showAll}
+                onChange={(e) => setShowAll(e.target.checked)}
+                className="w-4 h-4 rounded text-orange-500 focus:ring-orange-500 bg-zinc-800 border-zinc-700"
+            />
+            <label htmlFor="showAll" className="text-sm text-zinc-400">
+                Show all
             </label>
         </div>
         <div className="flex gap-3 text-sm">
@@ -108,6 +124,8 @@ const FilterToggle = ({ showCompleted, setShowCompleted, undoneCount, completedC
 interface FilterToggleProps {
     showCompleted: boolean;
     setShowCompleted: (value: boolean) => void;
+    showAll: boolean;
+    setShowAll: (value: boolean) => void;
     undoneCount: number;
     completedCount: number;
 }

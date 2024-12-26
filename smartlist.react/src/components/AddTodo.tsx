@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTodo } from '../context';
 import { Input } from './Input';
-
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+import {DAYS} from './Constants.tsx';
 
 export const AddTodo = () => {
   const [input, setInput] = useState('');
