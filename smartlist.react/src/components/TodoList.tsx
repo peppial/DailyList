@@ -1,5 +1,5 @@
 import { TodoItem } from './TodoItem'
-import { useTodo } from '../context'
+import {Todo, useTodo} from '../context'
 import { SiStarship } from 'react-icons/si'
 import {useState} from 'react'
 import { ChevronUp, ChevronDown } from 'lucide-react'
@@ -23,9 +23,15 @@ export const TodoList = () => {
        (todo.days?.length === 0 || todo.days?.includes(currentDay))
     );
 
-    const filteredTodos = showAll?todos:showCompleted ? completedTodos : undoneTodos;
+    const temp:Todo[] = showAll ? todos:showCompleted ? completedTodos : undoneTodos;
+    const filteredTodos: Todo[] = temp.map(todo => {
+        if (todo.text.includes("(0)")) {
+            return { ...todo, text: todo.text.replace("(0)", todo.count.toString()) };
+        }
+        return todo;
+    });
+
    
-    console.log(showAll)
     if (!todos.length || (!showAll && !showCompleted && undoneTodos.length === 0)) {
         return (
             <div className="max-w-lg px-5 m-auto space-y-4">

@@ -14,6 +14,7 @@ export interface Todo {
   text: string;
   status: 'undone' | 'completed';
   days: number[];
+  count: number;
 }
 
 export const TodoContext = createContext<TodoContextProps | undefined>(undefined);
@@ -56,7 +57,8 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setTodos(prevTodos =>
             prevTodos.map(todo => ({
               ...todo,
-              status: 'undone'
+              status: 'undone',
+              count: todo.count+1
             }))
         );
         localStorage.setItem('lastResetDate', today);
@@ -86,6 +88,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
       text,
       status: 'undone',
       days,
+      count: 1,
     };
     setTodos(prevTodos => [...prevTodos, newTodo]);
   };
