@@ -48,7 +48,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [todos, setTodos] = useLocalStorageState<Todo[]>('todos', []);
 
   useEffect(() => {
-    const checkAndResetTodos = () => {
+    const checkAndResetTodos = async () => {
       const now = new Date();
       const lastResetDate = localStorage.getItem('lastResetDate');
       const today = now.toDateString();
@@ -62,6 +62,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }))
         );
         localStorage.setItem('lastResetDate', today);
+        await saveTodo();
       }
     };
 
@@ -82,7 +83,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => clearTimeout(timerId);
   }, []);
 
-  const addTodo = (text: string, days: number[]) => {
+  const addTodo = async (text: string, days: number[]) => {
     const newTodo: Todo = {
       id: generateId(),
       text,
@@ -124,6 +125,33 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTodos(newTodos);
   };
 
+  const  saveTodo= async () => {
+    try {
+       const response = await fetch('https://ermena.com/daylink/save-json.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          todos: todos,
+          resetDate: new Date(),
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Todos backup saved:', result);
+
+    } catch (error) {
+      console.error('Failed to backup todos:', error);
+    }
+  
+  };
+  
   const value: TodoContextProps = {
     todos,
     addTodo,
